@@ -5,20 +5,22 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.CharsetUtil;
 
 /**
  * Created by hy on 7/11/17.
  */
-public class NettyServerHandler extends ChannelInboundHandlerAdapter {
+public class NettyServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
+
+
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf in = (ByteBuf) msg;
+    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
         //将消息记录到控制台
         System.out.println(
-                "Server received: " + in.toString(CharsetUtil.UTF_8));
+                "Server received: " + msg.toString(CharsetUtil.UTF_8));
         //将接收到的消息写给发送者，而不冲刷出站消息
-        ctx.write(in);
+        ctx.write(msg);
     }
 
     @Override
